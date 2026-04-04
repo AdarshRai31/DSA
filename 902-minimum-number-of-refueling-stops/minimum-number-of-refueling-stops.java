@@ -1,22 +1,26 @@
 class Solution {
     public int minRefuelStops(int target, int startFuel, int[][] stations) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());  
-
         int count = 0;
-        int i = 0;
+        boolean[] used = new boolean[stations.length];
 
         while (startFuel < target) {
-
-            while (i < stations.length && stations[i][0] <= startFuel) {
-                pq.offer(stations[i][1]);
-                i++;
+            int index = -1;
+            int max = -1;
+            for (int i = 0; i < stations.length; i++) {
+                if (!used[i] && stations[i][0] <= startFuel) {
+                    if (stations[i][1] > max) {
+                        max = stations[i][1];
+                        index = i;
+                    }
+                }
             }
 
-            if (pq.isEmpty()) {
+            if (index == -1) {
                 return -1;
             }
 
-            startFuel += pq.poll();
+            startFuel += max;
+            used[index] = true;
             count++;
         }
         return count; 
